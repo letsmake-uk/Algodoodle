@@ -2,10 +2,21 @@
 /*
  *  Simple implementation of a LOGO style turtle to draw with
  */
-
+class Instruction
+{
+  public String action;
+  public int value;
+  Instruction(String _action, int _value)
+  {
+    action = _action;
+    value = _value;
+  }
+}
 
 class Turtle
 {
+  ArrayList<Instruction> instructions = new ArrayList<Instruction>(); 
+  Instruction current = new Instruction("",0);
   int delayTime = 500;  
   
   public color colour;
@@ -28,6 +39,50 @@ class Turtle
     penDown      = true;
   }
 
+  void addInstruction(String _action, int _value)
+  {
+    //validation of string
+    instructions.add(new Instruction(_action, _value));
+  }
+  
+  void addInstruction(String _action)
+  {
+    //validation of string
+    instructions.add(new Instruction(_action, 0));
+  }  
+  
+  void move()
+  {
+    if(instructions.size() > 0){
+      current = instructions.get(0);
+      instructions.remove(0);
+      println(current.action);
+      println(current.value);
+      if(current.action == "left"){
+        left(current.value);
+      }
+      else if (current.action == "right"){
+        right(current.value);
+      }
+      else if (current.action == "forward") {
+        forward(current.value);
+      }
+      else if (current.action == "penup") {
+        penUp();
+      }
+      else if (current.action == "pendown") {
+        penDown();
+      }
+      else {
+        println("Sorry, I don't understand that instruction!");
+      }
+    }
+    else {
+      println("We are done here!");
+      noLoop();
+    }
+  }
+  
   void forward( float distance )
   {
     PVector moveVec = PVector.fromAngle( heading );
